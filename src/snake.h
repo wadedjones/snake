@@ -4,9 +4,8 @@
 #include <raylib.h>
 #include <stddef.h>
 
-#define SNAKE_SEG_SIZE 10
+#define SNAKE_SIZE 10
 #define SNAKE_SPEED 10
-#define SNAKE_OFFSET (SNAKE_SEG_SIZE - SNAKE_SPEED)
 
 typedef enum Snake_Direction { LEFT, DOWN, UP, RIGHT } Snake_Direction;
 
@@ -19,10 +18,6 @@ typedef struct Snake_Head {
   Snake_Seg snake_segments[256];
   size_t len;
   Vector2 size;
-  size_t speed;
-  size_t score;
-  size_t level;
-  size_t lives;
 } Snake_Head;
 
 typedef struct Apple {
@@ -31,17 +26,12 @@ typedef struct Apple {
   Vector2 pos;
 } Apple;
 
-/* TODO change over stats from snake to game stats struct */
-typedef struct Game_Stats {
-  size_t score;
-  size_t level;
-  size_t lives;
-} Game_Stats;
+/* Prototypes */
 
-Snake_Head *snake_init(void);
+void snake_init(Snake_Head *snake);
 void snake_draw(Snake_Head *snake);
 void snake_move(Snake_Head *snake);
-void snake_get_key(Snake_Head *snake);
+void get_key_press(Snake_Head *snake);
 void snake_collision(Snake_Head *snake, Apple *apple);
 void snake_reset(Snake_Head *snake);
 void snake_grow(Snake_Head *snake);
