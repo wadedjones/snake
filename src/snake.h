@@ -1,6 +1,8 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
+#include "apple.h"
+#include "game.h"
 #include <raylib.h>
 #include <stddef.h>
 
@@ -20,23 +22,13 @@ typedef struct Snake_Head {
   Vector2 size;
 } Snake_Head;
 
-typedef struct Apple {
-  size_t count;
-  Vector2 size;
-  Vector2 pos;
-} Apple;
-
 /* Prototypes */
-
 void snake_init(Snake_Head *snake);
 void snake_draw(Snake_Head *snake);
 void snake_move(Snake_Head *snake);
 void get_key_press(Snake_Head *snake);
-void snake_collision(Snake_Head *snake, Apple *apple);
-void snake_reset(Snake_Head *snake);
+void snake_collision(Snake_Head *snake, Apple *apple, Game_Stats *game);
+void snake_reset(Snake_Head *snake, Game_Stats *game);
 void snake_grow(Snake_Head *snake);
-Apple *apple_init(void);
-void apple_draw(Apple *apple);
-void apple_update(Apple *apple);
 
 #endif

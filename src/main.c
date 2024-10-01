@@ -1,48 +1,69 @@
+#include "apple.h"
 #include "game.h"
 #include "snake.h"
 #include <raylib.h>
-// #include <stdio.h>
-
-void draw_grid(void);
+#include <stdio.h>
 
 int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake");
+
+  /* Initialize all game elements */
   Snake_Head snake;
+  Game_Stats game;
+  Apple apple;
   snake_init(&snake);
+  game_init(&game);
+  apple_init(&apple);
+
   SetTargetFPS(FPS);
 
+  /* Initialize Score value */
+  char score[5] = {0};
+  sprintf(score, "%ld", game.score);
+  char lives[5] = {0};
+  sprintf(lives, "%ld", game.lives);
+
   while (!WindowShouldClose()) {
-    // sprintf(score, "%ld", snake->score);
-    // sprintf(level, "%ld", snake->level);
-    // sprintf(lives, "%ld", snake->lives);
-    // apple_draw(apple);
-    // snake_collision(snake, apple);
-    get_key_press(&snake);
+    switch (game.screen) {
+    case TITLE:
+      if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
+        game.screen = PLAY;
+      }
+      break;
+    case PLAY:
+      break;
+    case GAME_OVER:
+      if (IsKeyPressed(KEY_ENTER)) {
+        game.screen = TITLE;
+      }
+      break;
+    default:
+      break;
+    }
     BeginDrawing();
     ClearBackground(BLACK);
-    // DrawLine(0, GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT, WHITE);
-    // DrawText("Score", 20, 415, 20, WHITE);
-    // DrawText(score, 90, 415, 20, WHITE);
-    // DrawText("Lives", 165, 415, 20, WHITE);
-    // DrawText(lives, 235, 415, 20, WHITE);
-    // DrawText("Level", 310, 415, 20, WHITE);
-    // DrawText(level, 380, 415, 20, WHITE);
-    snake_draw(&snake);
-    draw_grid();
+    switch (game.screen) {
+    case TITLE: {
+      game_title(&game);
+    } break;
+    case PLAY: {
+      apple_draw(&apple);
+      snake_draw(&snake);
+      draw_grid();
+      get_key_press(&snake);
+      snake_move(&snake);
+      snake_collision(&snake, &apple, &game);
+      game_hud(&game);
+    } break;
+    case GAME_OVER:
+      game_over(&game);
+      break;
+    default:
+      break;
+    }
     EndDrawing();
-    snake_move(&snake);
   }
 
   CloseWindow();
   return 0;
-}
-
-void draw_grid(void) {
-  int cell_size = 10;
-  for (size_t i = 0; i < GAME_WIDTH; i++) {
-    for (size_t j = 0; j < GAME_HEIGHT; j++) {
-      DrawRectangleLines(i * cell_size, j * cell_size, cell_size, cell_size,
-                         BLACK);
-    }
-  }
 }
